@@ -14,7 +14,7 @@ from __future__ import absolute_import, print_function, division
 
 from six.moves import range
 from numpy import dot, append, column_stack, ones
-from numpy.linalg import norm, inv, multi_dot
+from numpy.linalg import norm, inv
 from numpy.random import multivariate_normal
 
 
@@ -22,7 +22,8 @@ class BayesianRidgeRegression(object):
     """
     Bayesian Ridge Regression
     """
-    def __init__(self, lambda_reg=0.001, add_ones=False, normalize_lambda=True):
+    def __init__(self, lambda_reg=0.001, add_ones=False,
+                 normalize_lambda=True):
         """
         Parameters
         ----------
@@ -69,9 +70,9 @@ class BayesianRidgeRegression(object):
         else:
             self.inverse_covariance = inverse_covariance
         # estimate of the parameters
-        self.beta_estimate = multi_dot([self.inverse_covariance, X_ones.T, y])
+        self.beta_estimate = self.inverse_covariance.dot(X_ones.T).dot(y)
         # now we need the estimate of the noise variance
-        # reference: https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
+        # https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
         pred = dot(X_ones, self.beta_estimate)
         # get the residual of the predictions and square it
         pred -= y
