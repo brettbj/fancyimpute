@@ -13,7 +13,7 @@
 from __future__ import absolute_import, print_function, division
 
 import numpy as np
-from keras.objectives import mse
+from keras.objectives import mse, binary_crossentropy
 from keras.models import Sequential
 from keras.layers.core import Dropout, Dense
 from keras.regularizers import l1l2
@@ -39,7 +39,11 @@ def make_reconstruction_loss(n_features, mask_indicates_missing_values=False):
         pred_observed = y_pred * observed_mask
         pred_observed.name = "$y_pred_observed"
 
-        return mse(y_true=X_values_observed, y_pred=pred_observed)
+        print('updated reconstruction')
+        return binary_crossentropy(y_true=X_values_observed,
+                                   y_pred=pred_observed)
+        # replace cost function here
+        # return mse(y_true=X_values_observed, y_pred=pred_observed)
     return reconstruction_loss
 
 
